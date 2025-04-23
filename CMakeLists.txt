@@ -354,6 +354,13 @@ target_link_libraries(pmtv INTERFACE)
 add_library(vir INTERFACE)
 target_include_directories(vir INTERFACE ${vir-simd_SOURCE_DIR}/)
 
+# the script configure won't run on win32 without asking bash to do it
+if(WIN32)
+  set(BASH "bash.exe")
+else()
+  set(BASH "")
+endif()
+
 # FFTW3 is build 2 times for float and double precisions
 set(FFTW_PREFIX ${CMAKE_CURRENT_BINARY_DIR}/fftw)
 if(EMSCRIPTEN)
@@ -390,6 +397,7 @@ if(EMSCRIPTEN)
 else()
   set(FFTW_CFLAGS "${CFLAGS} -fPIC -w -O2 -g0 -march=native -mtune=native -ffunction-sections -fdata-sections")
   set(FFTW_CONFIG
+      ${BASH}
       ${FFTW_PREFIX}/src/configure
       --enable-silent-rules
       --quiet

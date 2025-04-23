@@ -16,6 +16,10 @@ if(NOT EMSCRIPTEN)
            gnuradio-options
            pmtv)
 
+  if(WIN32)
+    target_compile_definitions(gnuradio-plugin PRIVATE BUILDING_MYPLUGIN)
+  endif()
+
   install(
     TARGETS gnuradio-plugin
     EXPORT graphPluginTargets
