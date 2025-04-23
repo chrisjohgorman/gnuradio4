@@ -22,6 +22,12 @@
 
 #include <gnuradio-4.0/meta/formatter.hpp>
 
+#if defined(_WIN32)
+using ThreadCountType = unsigned long long;
+#else
+using ThreadCountType = unsigned long;
+#endif
+
 namespace gr::thread_pool {
 namespace detail {
 
@@ -632,7 +638,7 @@ private:
                 }
                 running = false;
             } else if (timeDiffSinceLastUsed > keepAliveDuration) { // decrease to the minimum of _minThreads in a thread safe way
-                unsigned long nThreads = numThreads();
+                ThreadCountType nThreads = numThreads();
                 while (nThreads > minThreads()) { // compare and swap loop
                     if (_numThreads.compare_exchange_weak(nThreads, nThreads - 1, std::memory_order_acq_rel)) {
                         _numThreads.notify_all();
