@@ -8,11 +8,9 @@
 #include <numeric>
 #include <ranges>
 #include <source_location>
-#ifdef _WIN32
-#include <windows.h>
-#else
+#ifndef _WIN32
 #include <sys/ioctl.h>
-#endif
+#endif // _WIN32
 #include <vector>
 
 #include <format>
