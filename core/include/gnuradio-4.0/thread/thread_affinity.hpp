@@ -21,6 +21,12 @@
 #endif
 #endif
 
+#if defined(__MINGW32__) // these headers are present on __MINGW32__
+#include <pthread.h>
+#include <sched.h>
+#include <unistd.h>
+#endif
+
 namespace gr::thread_pool::thread {
 
 constexpr size_t THREAD_MAX_NAME_LENGTH  = 16;

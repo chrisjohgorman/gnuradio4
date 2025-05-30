@@ -43,7 +43,7 @@ const boost::ut::suite<"gr::thread_pool GR4 default"> defaultThreadPool = [] {
         expect(ret.get() == 42);
 
         auto taskName = pool.execute<"taskName", 0, -1>([] { return gr::thread_pool::thread::getThreadName(); });
-#if defined(__EMSCRIPTEN__) || defined(__APPLE__)
+#if defined(__EMSCRIPTEN__) || defined(__APPLE__) || defined(_WIN32)
         expect(taskName.get() == "unknown thread name"_b);
 #else
         expect(taskName.get() == "taskName"_b);

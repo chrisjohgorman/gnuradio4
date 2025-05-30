@@ -142,7 +142,11 @@ public:
             }
 
             for (const auto& file : std::filesystem::directory_iterator{directory}) {
+#ifdef _WIN32
+                if (file.is_regular_file() && file.path().extension() == ".dll") {
+#else
                 if (file.is_regular_file() && file.path().extension() == ".so") {
+#endif // _WIN32
                     auto fileString = file.path().string();
                     if (_loadedPluginFiles.contains(fileString)) {
                         continue;
