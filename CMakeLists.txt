@@ -357,8 +357,18 @@ target_include_directories(vir INTERFACE ${vir-simd_SOURCE_DIR}/)
 # the script configure won't run on win32 without asking bash to do it
 if(WIN32)
   set(BASH "bash.exe")
+  # clang64 build requires setting CC or configure finds /usr/bin/gcc from msys2
+  if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+    set(BUILD_COMPILER "CC=clang.exe")
+  endif()
+  # on windows gcc requires stdc++exp to link for <format> and <print> functions
+  if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+    set(BUILD_COMPILER "CC=gcc.exe") # ensure we're using the right compiler for fftw build
+    set(CMAKE_CXX_STANDARD_LIBRARIES "${CMAKE_CXX_STANDARD_LIBRARIES} -lstdc++exp")
+  endif()
 else()
   set(BASH "")
+  set(BUILD_COMPILER "")
 endif()
 
 # FFTW3 is build 2 times for float and double precisions
@@ -399,6 +409,7 @@ else()
   set(FFTW_CONFIG
       ${BASH}
       ${FFTW_PREFIX}/src/configure
+      ${BUILD_COMPILER}
       --enable-silent-rules
       --quiet
       --disable-fortran
