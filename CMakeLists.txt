@@ -103,7 +103,7 @@ option(ENABLE_TBB "Enable the TBB dependency for std::execution::par in gcc" OFF
 option(ENABLE_EXAMPLES "Enable Example Builds" ${GR_TOPLEVEL_PROJECT})
 option(ENABLE_TESTING "Enable Test Builds" ${GR_TOPLEVEL_PROJECT})
 
-if(ENABLE_TESTING AND (UNIX OR APPLE))
+if(ENABLE_TESTING AND (UNIX OR APPLE OR WIN32))
   include(CTest)
   list(APPEND CMAKE_CTEST_ARGUMENTS "--output-on-failure")
   enable_testing()
@@ -506,7 +506,7 @@ add_subdirectory(algorithm)
 add_subdirectory(blocks)
 
 if(ENABLE_TESTING
-   AND (UNIX OR APPLE)
+   AND (UNIX OR APPLE OR WIN32)
    AND ENABLE_COVERAGE)
   message("Coverage reporting enabled")
   include(cmake/CodeCoverage.cmake) # https://github.com/bilke/cmake-modules/blob/master/CodeCoverage.cmake #
