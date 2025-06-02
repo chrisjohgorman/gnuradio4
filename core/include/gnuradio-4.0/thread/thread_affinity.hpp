@@ -16,12 +16,16 @@
 #if !defined(_WIN32) && (defined(__unix__) || defined(__unix) || (defined(__APPLE__) && defined(__MACH__))) // UNIX-style OS
 #include <unistd.h>
 #if defined(_POSIX_VERSION) && not defined(__EMSCRIPTEN__)
+#define HAS_PTHREAD_SUPPORT       1
+#define HAS_POSIX_PROCESS_CONTROL 1
 #include <pthread.h>
 #include <sched.h>
 #endif
 #endif
 
-#if defined(__MINGW32__) // these headers are present on __MINGW32__
+#if defined(__MINGW32__) || 1
+#define HAS_PTHREAD_SUPPORT 1
+#undef HAS_POSIX_PROCESS_CONTROL // winpthreads doesn't support POSIX process control functions but for getpid()
 #include <pthread.h>
 #include <sched.h>
 #include <unistd.h>
@@ -64,7 +68,7 @@ concept thread_type = std::is_same_v<type, std::thread>;
 #endif
 
 namespace detail {
-#if defined(_POSIX_VERSION) && not defined(__EMSCRIPTEN__) && not defined(__APPLE__)
+#if defined(_POSIX_VERSION) && not defined(__EMSCRIPTEN__) && not defined(__APPLE__) || defined(HAS_PTHREAD_SUPPORT)
 template<typename Tp, typename... Us>
 constexpr decltype(auto) firstElement(Tp&& t, Us&&...) noexcept {
     return std::forward<Tp>(t);
@@ -108,7 +112,7 @@ inline std::string getProcessName(const int pid = detail::getPid()) {
 inline std::string getProcessName(const int /*pid*/ = -1) { return "unknown_process"; }
 #endif
 
-#if defined(_POSIX_VERSION) && not defined(__EMSCRIPTEN__) && not defined(__APPLE__)
+#if defined(_POSIX_VERSION) && not defined(__EMSCRIPTEN__) && not defined(__APPLE__) || defined(HAS_PTHREAD_SUPPORT)
 inline std::string getThreadName(thread_type auto&... thread) {
     const pthread_t handle = detail::getPosixHandler(thread...);
     if (handle == 0U) {
@@ -133,7 +137,7 @@ inline void setProcessName(const std::string_view& processName, int pid = detail
 inline void setProcessName(const std::string_view& /*processName*/, int /*pid*/ = -1) {}
 #endif
 
-#if defined(_POSIX_VERSION) && not defined(__EMSCRIPTEN__) && not defined(__APPLE__)
+#if defined(_POSIX_VERSION) && not defined(__EMSCRIPTEN__) && not defined(__APPLE__) || defined(HAS_PTHREAD_SUPPORT)
 inline void setThreadName(const std::string_view& threadName, thread_type auto&... thread) {
     const pthread_t handle = detail::getPosixHandler(thread...);
     if (handle == 0U) {
@@ -212,7 +216,7 @@ constexpr bool setThreadAffinity(const T& /*threadMap*/, thread_type auto&...) {
 }
 #endif
 
-#if defined(_POSIX_VERSION) && not defined(__EMSCRIPTEN__) && not defined(__APPLE__)
+#if defined(_POSIX_VERSION) && not defined(__EMSCRIPTEN__) && not defined(__APPLE__) || defined(HAS_POSIX_PROCESS_CONTROL)
 inline std::vector<bool> getProcessAffinity(const int pid = detail::getPid()) {
     if (pid <= 0) {
         throw std::system_error(THREAD_UNINITIALISED, thread_exception(), std::format("getProcessAffinity({}) -- invalid pid", pid));
@@ -229,7 +233,7 @@ inline std::vector<bool> getProcessAffinity(const int /*pid*/ = -1) {
 }
 #endif
 
-#if defined(_POSIX_VERSION) && not defined(__EMSCRIPTEN__) && not defined(__APPLE__)
+#if defined(_POSIX_VERSION) && not defined(__EMSCRIPTEN__) && not defined(__APPLE__) || defined(HAS_POSIX_PROCESS_CONTROL)
 template<class T>
 requires requires(T value) { std::get<0>(value); }
 inline constexpr bool setProcessAffinity(const T& threadMap, const int pid = detail::getPid()) {
@@ -286,7 +290,7 @@ struct SchedulingParameter {
 namespace detail {
 inline Policy getEnumPolicy(const int policy) {
     switch (policy) {
-#if defined(_POSIX_VERSION) && not defined(__EMSCRIPTEN__) && not defined(__APPLE__)
+#if defined(_POSIX_VERSION) && not defined(__EMSCRIPTEN__) && not defined(__APPLE__) || defined(HAS_PTHREAD_SUPPORT)
     case SCHED_FIFO: return Policy::FIFO;
     case SCHED_RR: return Policy::ROUND_ROBIN;
     case SCHED_OTHER: return Policy::OTHER;
@@ -296,7 +300,7 @@ inline Policy getEnumPolicy(const int policy) {
 }
 } // namespace detail
 
-#if defined(_POSIX_VERSION) && not defined(__EMSCRIPTEN__) && not defined(__APPLE__)
+#if defined(_POSIX_VERSION) && not defined(__EMSCRIPTEN__) && not defined(__APPLE__) || defined(HAS_POSIX_PROCESS_CONTROL)
 inline struct SchedulingParameter getProcessSchedulingParameter(const int pid = detail::getPid()) {
     if (pid <= 0) {
         throw std::system_error(THREAD_UNINITIALISED, thread_exception(), std::format("getProcessSchedulingParameter({}) -- invalid pid", pid));
@@ -312,7 +316,7 @@ inline struct SchedulingParameter getProcessSchedulingParameter(const int pid = 
 inline struct SchedulingParameter getProcessSchedulingParameter(const int /*pid*/ = -1) { return {}; }
 #endif
 
-#if defined(_POSIX_VERSION) && not defined(__EMSCRIPTEN__) && not defined(__APPLE__)
+#if defined(_POSIX_VERSION) && not defined(__EMSCRIPTEN__) && not defined(__APPLE__) || defined(HAS_POSIX_PROCESS_CONTROL)
 inline void setProcessSchedulingParameter(Policy scheduler, int priority, const int pid = detail::getPid()) {
     if (pid <= 0) {
         throw std::system_error(THREAD_UNINITIALISED, thread_exception(), std::format("setProcessSchedulingParameter({}, {}, {}) -- invalid pid", scheduler, priority, pid));
@@ -323,9 +327,7 @@ inline void setProcessSchedulingParameter(Policy scheduler, int priority, const 
         throw std::system_error(THREAD_VALUE_RANGE, thread_exception(), std::format("setProcessSchedulingParameter({}, {}, {}) -- requested priority out-of-range [{}, {}]", scheduler, priority, pid, minPriority, maxPriority));
     }
 
-    struct sched_param param {
-        .sched_priority = priority
-    };
+    struct sched_param param{.sched_priority = priority};
 
     if (int rc = sched_setscheduler(pid, scheduler, &param); rc != 0) {
         throw std::system_error(rc, thread_exception(), std::format("setProcessSchedulingParameter({}, {}, {}) - sched_setscheduler return code: {}", scheduler, priority, pid, rc));
@@ -335,7 +337,7 @@ inline void setProcessSchedulingParameter(Policy scheduler, int priority, const 
 inline void setProcessSchedulingParameter(Policy /*scheduler*/, int /*priority*/, const int /*pid*/ = -1) {}
 #endif
 
-#if defined(_POSIX_VERSION) && not defined(__EMSCRIPTEN__) && not defined(__APPLE__)
+#if defined(_POSIX_VERSION) && not defined(__EMSCRIPTEN__) && not defined(__APPLE__) || defined(HAS_PTHREAD_SUPPORT)
 inline struct SchedulingParameter getThreadSchedulingParameter(thread_type auto&... thread) {
     const pthread_t handle = detail::getPosixHandler(thread...);
     if (handle == 0U) {
@@ -352,7 +354,7 @@ inline struct SchedulingParameter getThreadSchedulingParameter(thread_type auto&
 inline struct SchedulingParameter getThreadSchedulingParameter(thread_type auto&... /*thread*/) { return {}; }
 #endif
 
-#if defined(_POSIX_VERSION) && not defined(__EMSCRIPTEN__) && not defined(__APPLE__)
+#if defined(_POSIX_VERSION) && not defined(__EMSCRIPTEN__) && not defined(__APPLE__) || defined(HAS_PTHREAD_SUPPORT)
 inline void setThreadSchedulingParameter(Policy scheduler, int priority, thread_type auto&... thread) {
     const pthread_t handle = detail::getPosixHandler(thread...);
     if (handle == 0U) {
@@ -364,9 +366,7 @@ inline void setThreadSchedulingParameter(Policy scheduler, int priority, thread_
         throw std::system_error(THREAD_VALUE_RANGE, thread_exception(), std::format("setThreadSchedulingParameter({}, {}, {}) -- requested priority out-of-range [{}, {}]", scheduler, priority, detail::getThreadName(handle), minPriority, maxPriority));
     }
 
-    struct sched_param param {
-        .sched_priority = priority
-    };
+    struct sched_param param{.sched_priority = priority};
 
     if (int rc = pthread_setschedparam(handle, scheduler, &param); rc != 0) {
         throw std::system_error(rc, thread_exception(), std::format("setThreadSchedulingParameter({}, {}, {}) - pthread_setschedparam return code: {}", scheduler, priority, detail::getThreadName(handle), rc));
