@@ -35,6 +35,14 @@ gr_add_block_library(
   LINK_LIBRARIES
   ${GrBasicBlocks_LIBS})
 
+if(TARGET GrBasicBlocksObject AND WIN32)
+  target_compile_definitions(GrBasicBlocksObject PRIVATE BUILDING_MYPLUGIN)
+endif()
+
+if(TARGET GrBasicBlocksShared AND WIN32)
+  target_compile_definitions(GrBasicBlocksShared PRIVATE BUILDING_MYPLUGIN)
+endif()
+
 if(TARGET GrBasicBlocksShared AND ENABLE_TESTING)
   add_subdirectory(test)
 endif()

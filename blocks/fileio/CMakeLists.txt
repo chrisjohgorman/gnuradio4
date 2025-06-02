@@ -2,9 +2,6 @@ add_library(gr-fileio INTERFACE)
 target_link_libraries(gr-fileio INTERFACE gnuradio-core)
 target_include_directories(gr-fileio INTERFACE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/>
                                                $<INSTALL_INTERFACE:include/>)
-if(WIN32)
-  target_compile_definitions(gr-fileio INTERFACE BUILDING_MYPLUGIN)
-endif()
 
 gr_add_block_library(
   GrFileIoBlocks
@@ -14,6 +11,10 @@ gr_add_block_library(
   include/gnuradio-4.0/fileio/BasicFileIo.hpp
   LINK_LIBRARIES
   gr-fileio)
+
+if(TARGET GrFileIoBlocksObject AND WIN32)
+  target_compile_definitions(GrFileIoBlocksObject PRIVATE BUILDING_MYPLUGIN)
+endif()
 
 if(TARGET GrFileIoBlocksShared AND ENABLE_TESTING)
   add_subdirectory(test)
