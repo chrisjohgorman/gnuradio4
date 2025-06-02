@@ -2,9 +2,6 @@ add_library(gr-testing INTERFACE)
 target_link_libraries(gr-testing INTERFACE gnuradio-core ut-benchmark)
 target_include_directories(gr-testing INTERFACE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/>
                                                 $<INSTALL_INTERFACE:include/>)
-if(WIN32)
-  target_compile_definitions(gr-testing INTERFACE BUILDING_MYPLUGIN)
-endif()
 
 gr_add_block_library(
   GrTestingBlocks
@@ -19,6 +16,10 @@ gr_add_block_library(
   LINK_LIBRARIES
   gr-testing
   gnuradio-algorithm)
+
+if(TARGET GrTestingBlocksObject AND WIN32)
+  target_compile_definitions(GrTestingBlocksObject PRIVATE BUILDING_MYPLUGIN)
+endif()
 
 if(TARGET GrTestingBlocksShared AND ENABLE_TESTING)
   add_subdirectory(test)

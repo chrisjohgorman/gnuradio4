@@ -2,10 +2,6 @@ add_library(gr-fourier INTERFACE)
 target_link_libraries(gr-fourier INTERFACE gnuradio-core gnuradio-algorithm)
 target_include_directories(gr-fourier INTERFACE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/>
                                                 $<INSTALL_INTERFACE:include/>)
-if(WIN32)
-  target_compile_definitions(gr-fourier INTERFACE BUILDING_MYPLUGIN)
-endif()
-
 gr_add_block_library(
   GrFourierBlocks
   MAKE_SHARED_LIBRARY
@@ -14,6 +10,10 @@ gr_add_block_library(
   LINK_LIBRARIES
   gr-basic
   gr-fourier)
+
+if(TARGET GrFourierBlocksObject AND WIN32)
+  target_compile_definitions(GrFourierBlocksObject PRIVATE BUILDING_MYPLUGIN)
+endif()
 
 if(TARGET GrFourierBlocksShared AND ENABLE_TESTING)
   add_subdirectory(test)
