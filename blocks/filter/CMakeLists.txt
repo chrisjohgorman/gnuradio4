@@ -2,10 +2,6 @@ add_library(gr-filter INTERFACE)
 target_link_libraries(gr-filter INTERFACE gnuradio-core)
 target_include_directories(gr-filter INTERFACE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/>
                                                $<INSTALL_INTERFACE:include/>)
-if(WIN32)
-  target_compile_definitions(gr-filter INTERFACE BUILDING_MYPLUGIN)
-endif()
-
 gr_add_block_library(
   GrFilterBlocks
   MAKE_SHARED_LIBRARY
@@ -15,6 +11,10 @@ gr_add_block_library(
   LINK_LIBRARIES
   gr-filter
   gnuradio-algorithm)
+
+if(TARGET GrFilterBlocksObject AND WIN32)
+  target_compile_definitions(GrFilterBlocksObject PRIVATE BUILDING_MYPLUGIN)
+endif()
 
 if(TARGET GrFilterBlocksShared AND ENABLE_TESTING)
   add_subdirectory(test)

@@ -48,6 +48,9 @@ function(add_app_test TEST_NAME)
   add_executable(${TEST_NAME} ${TEST_NAME}.cpp)
   setup_test(${TEST_NAME})
   target_link_libraries(${TEST_NAME} PRIVATE gnuradio-core gnuradio-blocklib-core gnuradio-plugin)
+  if(WIN32)
+    target_compile_definitions(${TEST_NAME} PRIVATE BUILDING_MYPLUGIN)
+  endif()
   add_dependencies(
     ${TEST_NAME}
     GoodBasePlugin
