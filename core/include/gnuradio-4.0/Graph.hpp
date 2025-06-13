@@ -798,8 +798,6 @@ public:
     void forEachEdge(F&& f) const {
         std::ranges::for_each(_edges, f);
     }
-
-    std::shared_ptr<gr::thread_pool::BasicThreadPool> getIOThreadPool() const { return _ioThreadPool; }
 };
 
 static_assert(BlockLike<Graph>);

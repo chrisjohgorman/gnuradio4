@@ -21,11 +21,8 @@ const boost::ut::suite DynamicBlocktests = [] {
         const gr::Size_t nSamples = 5;
 
         gr::Graph graph;
-#if defined(_WIN32)
-        graph.getIOThreadPool()->waitUntilInitialised();
-#endif // #if defined(_WIN32)
-        auto& adder = graph.emplaceBlock<gr::blocks::math::Add<double>>({{"n_inputs", nInputs}});
-        auto& sink  = graph.emplaceBlock<TagSink<double, ProcessFunction::USE_PROCESS_ONE>>({});
+        auto&     adder = graph.emplaceBlock<gr::blocks::math::Add<double>>({{"n_inputs", nInputs}});
+        auto&     sink  = graph.emplaceBlock<TagSink<double, ProcessFunction::USE_PROCESS_ONE>>({});
 
         std::vector<TagSource<double>*> sources;
         for (std::size_t i = 0; i < nInputs; ++i) {
@@ -35,9 +32,6 @@ const boost::ut::suite DynamicBlocktests = [] {
         expect(gr::ConnectionResult::SUCCESS == graph.connect<"out">(adder).to<"in">(sink));
 
         gr::scheduler::Simple sched(std::move(graph));
-#if defined(_WIN32)
-        sched.graph().getIOThreadPool()->waitUntilInitialised();
-#endif // #if defined(_WIN32)
 
         expect(sched.runAndWait().has_value());
 
