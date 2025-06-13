@@ -19,12 +19,14 @@
 #include <gnuradio-4.0/meta/reflection.hpp>
 #include <gnuradio-4.0/thread/thread_pool.hpp>
 
-//FIXME - this is a hack to see if I can get the codebase built.  Findout "properly" where the
-//failure is.  The problem is that under Windows windows.h defines ERROR as 0.  This messes the
-//ERROR function work::status::ERROR.
+// Under Windows windows.h defines ERROR as 0.  This messes the
+// ERROR function work::status::ERROR.  Undefine ERROR and the
+// build proceeds.
+#ifdef _WIN32
 #ifdef ERROR
-#  undef ERROR
-#endif
+#undef ERROR
+#endif // #ifdef ERROR
+#endif // #ifdef _WIN32
 
 namespace gr::scheduler {
 using namespace gr::message;
