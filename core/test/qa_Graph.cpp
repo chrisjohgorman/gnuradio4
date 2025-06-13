@@ -47,6 +47,9 @@ const boost::ut::suite GraphTests = [] {
 
     "Graph connection buffer size test - default"_test = [] {
         Graph graph;
+#if defined(_WIN32)
+        graph.getIOThreadPool()->waitUntilInitialised();
+#endif // #if defined(_WIN32)
         auto& src  = graph.emplaceBlock<NullSource<float>>();
         auto& sink = graph.emplaceBlock<NullSink<float>>();
 
@@ -59,6 +62,9 @@ const boost::ut::suite GraphTests = [] {
 
     "Graph connection buffer size test - set, one"_test = [] {
         Graph graph;
+#if defined(_WIN32)
+        graph.getIOThreadPool()->waitUntilInitialised();
+#endif // #if defined(_WIN32)
         auto& src  = graph.emplaceBlock<NullSource<float>>();
         auto& sink = graph.emplaceBlock<NullSink<float>>();
 
@@ -72,6 +78,9 @@ const boost::ut::suite GraphTests = [] {
 
     "Graph connection buffer size test - set, many"_test = [] {
         Graph graph;
+#if defined(_WIN32)
+        graph.getIOThreadPool()->waitUntilInitialised();
+#endif // #if defined(_WIN32)
         auto& src   = graph.emplaceBlock<NullSource<float>>();
         auto& sink1 = graph.emplaceBlock<NullSink<float>>();
         auto& sink2 = graph.emplaceBlock<NullSink<float>>();
@@ -92,6 +101,9 @@ const boost::ut::suite GraphTests = [] {
 
     "Graph connection buffer size test - Multi output ports"_test = [] {
         Graph graph;
+#if defined(_WIN32)
+        graph.getIOThreadPool()->waitUntilInitialised();
+#endif // #if defined(_WIN32)
 
         const std::size_t       customBufferSize = 8192UZ;
         const std::size_t       nIterations      = 10;
