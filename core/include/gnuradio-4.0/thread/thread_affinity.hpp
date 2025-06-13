@@ -23,7 +23,7 @@
 #endif
 #endif
 
-#if defined(__MINGW32__) || 1
+#if defined(__MINGW32__)
 #define HAS_PTHREAD_SUPPORT 1
 #undef HAS_POSIX_PROCESS_CONTROL // winpthreads doesn't support POSIX process control functions but for getpid()
 #include <pthread.h>
