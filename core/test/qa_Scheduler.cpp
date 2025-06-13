@@ -376,6 +376,13 @@ const boost::ut::suite<"SchedulerTests"> SchedulerTests = [] {
     std::println("INFO: std::thread::hardware_concurrency() = {} - CPU thread bounds = [{}, {}]", std::thread::hardware_concurrency(), minThreads, maxThreads);
 
     "SimpleScheduler_linear"_test = [] {
+<<<<<<< HEAD
+=======
+        auto threadPool = std::make_shared<gr::thread_pool::BasicThreadPool>("custom pool", gr::thread_pool::CPU_BOUND, 2, 2);
+#if defined(_WIN32)
+        threadPool->waitUntilInitialised();
+#endif // #if defined(_WIN32)
+>>>>>>> f6b0572 (adding conditionals for testcases to run under win32)
         using scheduler               = gr::scheduler::Simple<>;
         std::shared_ptr<Tracer> trace = std::make_shared<Tracer>();
         auto                    sched = scheduler{getGraphLinear(trace), gr::thread_pool::kDefaultCpuPoolId};
@@ -386,6 +393,13 @@ const boost::ut::suite<"SchedulerTests"> SchedulerTests = [] {
     };
 
     "BreadthFirstScheduler_linear"_test = [] {
+<<<<<<< HEAD
+=======
+        auto threadPool = std::make_shared<gr::thread_pool::BasicThreadPool>("custom pool", gr::thread_pool::CPU_BOUND, 2, 2);
+#if defined(_WIN32)
+        threadPool->waitUntilInitialised();
+#endif // #if defined(_WIN32)
+>>>>>>> f6b0572 (adding conditionals for testcases to run under win32)
         using scheduler               = gr::scheduler::BreadthFirst<>;
         std::shared_ptr<Tracer> trace = std::make_shared<Tracer>();
         auto                    sched = scheduler{getGraphLinear(trace), gr::thread_pool::kDefaultCpuPoolId};
@@ -396,6 +410,13 @@ const boost::ut::suite<"SchedulerTests"> SchedulerTests = [] {
     };
 
     "SimpleScheduler_parallel"_test = [] {
+<<<<<<< HEAD
+=======
+        auto threadPool = std::make_shared<gr::thread_pool::BasicThreadPool>("custom pool", gr::thread_pool::CPU_BOUND, 2, 2);
+#if defined(_WIN32)
+        threadPool->waitUntilInitialised();
+#endif // #if defined(_WIN32)
+>>>>>>> f6b0572 (adding conditionals for testcases to run under win32)
         using scheduler               = gr::scheduler::Simple<>;
         std::shared_ptr<Tracer> trace = std::make_shared<Tracer>();
         auto                    sched = scheduler{getGraphParallel(trace), gr::thread_pool::kDefaultCpuPoolId};
@@ -406,6 +427,13 @@ const boost::ut::suite<"SchedulerTests"> SchedulerTests = [] {
     };
 
     "BreadthFirstScheduler_parallel"_test = [] {
+<<<<<<< HEAD
+=======
+        auto threadPool = std::make_shared<gr::thread_pool::BasicThreadPool>("custom pool", gr::thread_pool::CPU_BOUND, 2, 2);
+#if defined(_WIN32)
+        threadPool->waitUntilInitialised();
+#endif // #if defined(_WIN32)
+>>>>>>> f6b0572 (adding conditionals for testcases to run under win32)
         using scheduler               = gr::scheduler::BreadthFirst<>;
         std::shared_ptr<Tracer> trace = std::make_shared<Tracer>();
         auto                    sched = scheduler{getGraphParallel(trace), gr::thread_pool::kDefaultCpuPoolId};
@@ -431,6 +459,13 @@ const boost::ut::suite<"SchedulerTests"> SchedulerTests = [] {
     };
 
     "SimpleScheduler_scaled_sum"_test = [] {
+<<<<<<< HEAD
+=======
+        auto threadPool = std::make_shared<gr::thread_pool::BasicThreadPool>("custom pool", gr::thread_pool::CPU_BOUND, 2, 2);
+#if defined(_WIN32)
+        threadPool->waitUntilInitialised();
+#endif // #if defined(_WIN32)
+>>>>>>> f6b0572 (adding conditionals for testcases to run under win32)
         using scheduler = gr::scheduler::Simple<>;
         // construct an example graph and get an adjacency list for it
         std::shared_ptr<Tracer> trace = std::make_shared<Tracer>();
@@ -442,6 +477,13 @@ const boost::ut::suite<"SchedulerTests"> SchedulerTests = [] {
     };
 
     "BreadthFirstScheduler_scaled_sum"_test = [] {
+<<<<<<< HEAD
+=======
+        auto threadPool = std::make_shared<gr::thread_pool::BasicThreadPool>("custom pool", gr::thread_pool::CPU_BOUND, 2, 2);
+#if defined(_WIN32)
+        threadPool->waitUntilInitialised();
+#endif // #if defined(_WIN32)
+>>>>>>> f6b0572 (adding conditionals for testcases to run under win32)
         using scheduler               = gr::scheduler::BreadthFirst<>;
         std::shared_ptr<Tracer> trace = std::make_shared<Tracer>();
         auto                    sched = scheduler{getGraphScaledSum(trace), gr::thread_pool::kDefaultCpuPoolId};
@@ -452,6 +494,13 @@ const boost::ut::suite<"SchedulerTests"> SchedulerTests = [] {
     };
 
     "SimpleScheduler_linear_multi_threaded"_test = [] {
+<<<<<<< HEAD
+=======
+        auto threadPool = std::make_shared<gr::thread_pool::BasicThreadPool>("custom pool", gr::thread_pool::CPU_BOUND, 2, 2);
+#if defined(_WIN32)
+        threadPool->waitUntilInitialised();
+#endif // #if defined(_WIN32)
+>>>>>>> f6b0572 (adding conditionals for testcases to run under win32)
         using scheduler               = gr::scheduler::Simple<gr::scheduler::ExecutionPolicy::multiThreaded>;
         std::shared_ptr<Tracer> trace = std::make_shared<Tracer>();
         auto                    sched = scheduler{getGraphLinear(trace), gr::thread_pool::kDefaultCpuPoolId};
@@ -461,6 +510,13 @@ const boost::ut::suite<"SchedulerTests"> SchedulerTests = [] {
     };
 
     "BreadthFirstScheduler_linear_multi_threaded"_test = [] {
+<<<<<<< HEAD
+=======
+        auto threadPool = std::make_shared<gr::thread_pool::BasicThreadPool>("custom pool", gr::thread_pool::CPU_BOUND, 2, 2);
+#if defined(_WIN32)
+        threadPool->waitUntilInitialised();
+#endif // #if defined(_WIN32)
+>>>>>>> f6b0572 (adding conditionals for testcases to run under win32)
         using scheduler               = gr::scheduler::BreadthFirst<gr::scheduler::ExecutionPolicy::multiThreaded>;
         std::shared_ptr<Tracer> trace = std::make_shared<Tracer>();
         auto                    sched = scheduler{getGraphLinear(trace), gr::thread_pool::kDefaultCpuPoolId};
@@ -474,6 +530,13 @@ const boost::ut::suite<"SchedulerTests"> SchedulerTests = [] {
     };
 
     "SimpleScheduler_parallel_multi_threaded"_test = [] {
+<<<<<<< HEAD
+=======
+        auto threadPool = std::make_shared<gr::thread_pool::BasicThreadPool>("custom pool", gr::thread_pool::CPU_BOUND, 2, 2);
+#if defined(_WIN32)
+        threadPool->waitUntilInitialised();
+#endif // #if defined(_WIN32)
+>>>>>>> f6b0572 (adding conditionals for testcases to run under win32)
         using scheduler               = gr::scheduler::Simple<gr::scheduler::ExecutionPolicy::multiThreaded>;
         std::shared_ptr<Tracer> trace = std::make_shared<Tracer>();
         auto                    sched = scheduler{getGraphParallel(trace), gr::thread_pool::kDefaultCpuPoolId};
@@ -483,6 +546,13 @@ const boost::ut::suite<"SchedulerTests"> SchedulerTests = [] {
     };
 
     "BreadthFirstScheduler_parallel_multi_threaded"_test = [] {
+<<<<<<< HEAD
+=======
+        auto threadPool = std::make_shared<gr::thread_pool::BasicThreadPool>("custom pool", gr::thread_pool::CPU_BOUND, 2, 2);
+#if defined(_WIN32)
+        threadPool->waitUntilInitialised();
+#endif // #if defined(_WIN32)
+>>>>>>> f6b0572 (adding conditionals for testcases to run under win32)
         using scheduler               = gr::scheduler::BreadthFirst<gr::scheduler::ExecutionPolicy::multiThreaded>;
         std::shared_ptr<Tracer> trace = std::make_shared<Tracer>();
         auto                    sched = scheduler{getGraphParallel(trace), gr::thread_pool::kDefaultCpuPoolId};
@@ -496,6 +566,13 @@ const boost::ut::suite<"SchedulerTests"> SchedulerTests = [] {
     };
 
     "SimpleScheduler_scaled_sum_multi_threaded"_test = [] {
+<<<<<<< HEAD
+=======
+        auto threadPool = std::make_shared<gr::thread_pool::BasicThreadPool>("custom pool", gr::thread_pool::CPU_BOUND, 2, 2);
+#if defined(_WIN32)
+        threadPool->waitUntilInitialised();
+#endif // #if defined(_WIN32)
+>>>>>>> f6b0572 (adding conditionals for testcases to run under win32)
         using scheduler = gr::scheduler::Simple<gr::scheduler::ExecutionPolicy::multiThreaded>;
         // construct an example graph and get an adjacency list for it
         std::shared_ptr<Tracer> trace = std::make_shared<Tracer>();
@@ -506,6 +583,13 @@ const boost::ut::suite<"SchedulerTests"> SchedulerTests = [] {
     };
 
     "BreadthFirstScheduler_scaled_sum_multi_threaded"_test = [] {
+<<<<<<< HEAD
+=======
+        auto threadPool = std::make_shared<gr::thread_pool::BasicThreadPool>("custom pool", gr::thread_pool::CPU_BOUND, 2, 2);
+#if defined(_WIN32)
+        threadPool->waitUntilInitialised();
+#endif // #if defined(_WIN32)
+>>>>>>> f6b0572 (adding conditionals for testcases to run under win32)
         using scheduler               = gr::scheduler::BreadthFirst<gr::scheduler::ExecutionPolicy::multiThreaded>;
         std::shared_ptr<Tracer> trace = std::make_shared<Tracer>();
         auto                    sched = scheduler{getGraphScaledSum(trace), gr::thread_pool::kDefaultCpuPoolId};
@@ -519,8 +603,18 @@ const boost::ut::suite<"SchedulerTests"> SchedulerTests = [] {
     };
 
     "LifecycleBlock"_test = [] {
+<<<<<<< HEAD
+=======
+        auto threadPool = std::make_shared<gr::thread_pool::BasicThreadPool>("custom pool", gr::thread_pool::CPU_BOUND, 2, 2);
+#if defined(_WIN32)
+        threadPool->waitUntilInitialised();
+#endif // #if defined(_WIN32)
+>>>>>>> f6b0572 (adding conditionals for testcases to run under win32)
         using scheduler = gr::scheduler::Simple<>;
         gr::Graph flow;
+#if defined(_WIN32)
+        flow.getIOThreadPool()->waitUntilInitialised();
+#endif // #if defined(_WIN32)
 
         auto& lifecycleSource = flow.emplaceBlock<LifecycleSource<float>>();
         auto& lifecycleBlock  = flow.emplaceBlock<LifecycleBlock<float>>();
@@ -542,9 +636,19 @@ const boost::ut::suite<"SchedulerTests"> SchedulerTests = [] {
     };
 
     "propagate DONE check-infinite loop"_test = [] {
+<<<<<<< HEAD
+=======
+        auto threadPool = std::make_shared<gr::thread_pool::BasicThreadPool>("custom pool", gr::thread_pool::CPU_BOUND, 2, 2);
+#if defined(_WIN32)
+        threadPool->waitUntilInitialised();
+#endif // #if defined(_WIN32)
+>>>>>>> f6b0572 (adding conditionals for testcases to run under win32)
         using namespace gr::testing;
         using scheduler = gr::scheduler::Simple<>;
         gr::Graph flow;
+#if defined(_WIN32)
+        flow.getIOThreadPool()->waitUntilInitialised();
+#endif // #if defined(_WIN32)
 
         auto& source  = flow.emplaceBlock<CountingSource<float>>();
         auto& monitor = flow.emplaceBlock<Copy<float>>();
@@ -604,9 +708,19 @@ const boost::ut::suite<"SchedulerTests"> SchedulerTests = [] {
     };
 
     "propagate source DONE state: down-stream using EOS tag"_test = [&createWatchdog] {
+<<<<<<< HEAD
+=======
+        auto threadPool = std::make_shared<gr::thread_pool::BasicThreadPool>("custom pool", gr::thread_pool::CPU_BOUND, 2, 2);
+#if defined(_WIN32)
+        threadPool->waitUntilInitialised();
+#endif // #if defined(_WIN32)
+>>>>>>> f6b0572 (adding conditionals for testcases to run under win32)
         using namespace gr::testing;
         using scheduler = gr::scheduler::Simple<>;
         gr::Graph flow;
+#if defined(_WIN32)
+        flow.getIOThreadPool()->waitUntilInitialised();
+#endif /// #if defined(_WIN32)
 
         auto& source  = flow.emplaceBlock<ConstantSource<float>>({{"n_samples_max", 1024U}});
         auto& monitor = flow.emplaceBlock<Copy<float>>();
@@ -629,9 +743,19 @@ const boost::ut::suite<"SchedulerTests"> SchedulerTests = [] {
     };
 
     "propagate monitor DONE status: down-stream using EOS tag, upstream via disconnecting ports"_test = [&createWatchdog] {
+<<<<<<< HEAD
+=======
+        auto threadPool = std::make_shared<gr::thread_pool::BasicThreadPool>("custom pool", gr::thread_pool::CPU_BOUND, 2, 2);
+#if defined(_WIN32)
+        threadPool->waitUntilInitialised();
+#endif // #if defined(_WIN32)
+>>>>>>> f6b0572 (adding conditionals for testcases to run under win32)
         using namespace gr::testing;
         using scheduler = gr::scheduler::Simple<>;
         gr::Graph flow;
+#if defined(_WIN32)
+        flow.getIOThreadPool()->waitUntilInitialised();
+#endif // #if defined(_WIN32)
 
         auto& source  = flow.emplaceBlock<NullSource<float>>();
         auto& monitor = flow.emplaceBlock<HeadBlock<float>>({{"n_samples_max", 1024U}});
@@ -654,9 +778,19 @@ const boost::ut::suite<"SchedulerTests"> SchedulerTests = [] {
     };
 
     "propagate sink DONE status: upstream via disconnecting ports"_test = [&createWatchdog] {
+<<<<<<< HEAD
+=======
+        auto threadPool = std::make_shared<gr::thread_pool::BasicThreadPool>("custom pool", gr::thread_pool::CPU_BOUND, 2, 2);
+#if defined(_WIN32)
+        threadPool->waitUntilInitialised();
+#endif // #if defined(_WIN32)
+>>>>>>> f6b0572 (adding conditionals for testcases to run under win32)
         using namespace gr::testing;
         using scheduler = gr::scheduler::Simple<>;
         gr::Graph flow;
+#if defined(_WIN32)
+        flow.getIOThreadPool()->waitUntilInitialised();
+#endif // #if defined(_WIN32)
 
         auto& source  = flow.emplaceBlock<NullSource<float>>();
         auto& monitor = flow.emplaceBlock<Copy<float>>();
@@ -683,6 +817,9 @@ const boost::ut::suite<"SchedulerTests"> SchedulerTests = [] {
         using TScheduler = scheduler::Simple<scheduler::ExecutionPolicy::singleThreadedBlocking>;
 
         Graph flow;
+#if defined(_WIN32)
+        flow.getIOThreadPool()->waitUntilInitialised();
+#endif // #if defined(_WIN32)
         auto& source  = flow.emplaceBlock<NullSource<float>>();
         auto& monitor = flow.emplaceBlock<BusyLoopBlock<float>>();
         auto& sink    = flow.emplaceBlock<NullSink<float>>();
@@ -721,7 +858,12 @@ const boost::ut::suite<"SchedulerTests"> SchedulerTests = [] {
         const auto progressAfterInit = scheduler.graph().progress().value();
         auto       estInvokeCount    = [&monitor] {
             const auto invokeCountInit = monitor._invokeCount.value();
+            // sleep time here affects the success of expect(ge(invokeCount2, invokeCount1))
+#if defined(_WIN32)
+            std::this_thread::sleep_for(35ms);
+#else
             std::this_thread::sleep_for(20ms);
+#endif // #if defined(_WIN32)
             return monitor._invokeCount.value() - invokeCountInit;
         };
 

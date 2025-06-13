@@ -34,7 +34,10 @@ const boost::ut::suite<"Graph Formatter Tests"> graphFormatterTests = [] {
     using namespace gr::test;
 
     "Edge formatter tests"_test = [] {
-        Graph                  graph;
+        Graph graph;
+#if defined(_WIN32)
+        graph.getIOThreadPool()->waitUntilInitialised();
+#endif // #if defined(_WIN32)
         [[maybe_unused]] auto& source = graph.emplaceBlock<NullSource<float>>();
         [[maybe_unused]] auto& sink   = graph.emplaceBlock<NullSink<float>>();
         Edge                   edge{graph.blocks()[0UZ].get(), {1}, graph.blocks()[1UZ].get(), {2}, 1024, 1, "test_edge"};
@@ -79,7 +82,10 @@ const boost::ut::suite GraphMessageTests = [] {
     "BlockRegistry tests"_test = [] {
         gr::MsgPortOut toGraph;
         gr::Graph      testGraph(context->loader);
-        gr::MsgPortIn  fromGraph;
+#if defined(_WIN32)
+        testGraph.getIOThreadPool()->waitUntilInitialised();
+#endif // #if defined(_WIN32)
+        gr::MsgPortIn fromGraph;
 
         expect(eq(ConnectionResult::SUCCESS, toGraph.connect(testGraph.msgIn)));
         expect(eq(ConnectionResult::SUCCESS, testGraph.msgOut.connect(fromGraph)));
