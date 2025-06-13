@@ -145,8 +145,11 @@ const boost::ut::suite PortApiTests = [] {
 
     "ConnectionApi - Port-level"_test = [] {
         gr::Graph flow;
-        auto&     number = flow.emplaceBlock<repeater_source<int, 6>>();
-        auto&     scaled = flow.emplaceBlock<scale<int, 2>>();
+#if defined(_WIN32)
+        flow.getIOThreadPool()->waitUntilInitialised();
+#endif // #if defined(_WIN32)
+        auto& number = flow.emplaceBlock<repeater_source<int, 6>>();
+        auto& scaled = flow.emplaceBlock<scale<int, 2>>();
 
         expect(!number.value.isConnected());
         expect(!scaled.original.isConnected());
@@ -177,6 +180,9 @@ const boost::ut::suite PortApiTests = [] {
 
         // Block need to be alive for as long as the flow is
         gr::Graph flow;
+#if defined(_WIN32)
+        flow.getIOThreadPool()->waitUntilInitialised();
+#endif // #if defined(_WIN32)
 
         // Generators
         auto& answer = flow.emplaceBlock<repeater_source<int, 42>>();
@@ -193,6 +199,10 @@ const boost::ut::suite PortApiTests = [] {
         expect(eq(ConnectionResult::SUCCESS, flow.connect<"sum">(added).to<"sink">(out)));
 
         gr::scheduler::Simple sched{std::move(flow)};
+#if defined(_WIN32)
+        sched.graph().getIOThreadPool()->waitUntilInitialised();
+#endif // #if defined(_WIN32)
+
         expect(sched.runAndWait().has_value());
     };
 
@@ -219,6 +229,9 @@ const boost::ut::suite PortApiTests = [] {
         expect(eq(sink->dynamic_input_ports().size(), 3U));
 
         gr::graph graph;
+#if defined(_WIN32)
+        graph.getIOThreadPool()->waitUntilInitialised();
+#endif // #if defined(_WIN32)
 
         expect(eq(graph.edges_count(), 0U));
 
