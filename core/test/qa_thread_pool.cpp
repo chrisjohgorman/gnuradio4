@@ -6,8 +6,20 @@ const boost::ut::suite<"gr::thread_pool GR4 default"> defaultThreadPool = [] {
     using namespace boost::ut;
 
     "Basic ThreadPool tests"_test = [] {
+#if defined(_WIN32)
+        // on win32 these calls hang the test case unless waitUntilInitialised is used
+        expect(nothrow([] {
+            gr::thread_pool::BasicThreadPool io_bound("test", gr::thread_pool::IO_BOUND, 4UL);
+            io_bound.waitUntilInitialised();
+        }));
+        expect(nothrow([] {
+            gr::thread_pool::BasicThreadPool cpu_bound("test2", gr::thread_pool::CPU_BOUND, 4UL);
+            cpu_bound.waitUntilInitialised();
+        }));
+#else
         expect(nothrow([] { gr::thread_pool::BasicThreadPool("test", gr::thread_pool::IO_BOUND, 4UL); }));
         expect(nothrow([] { gr::thread_pool::BasicThreadPool("test2", gr::thread_pool::CPU_BOUND, 4UL); }));
+#endif // #if defined(_WIN32)
 
         std::atomic<int>                 enqueueCount{0};
         std::atomic<int>                 executeCount{0};
