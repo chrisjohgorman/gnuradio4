@@ -123,4 +123,8 @@ const boost::ut::suite<"basic math tests"> basicMath = [] {
     };
 };
 
-int main() { /* not needed for UT */ }
+int main() {
+#ifdef _WIN32
+    SetConsoleOutputCP(CP_UTF8);
+#endif // #ifdef _WIN32
+}

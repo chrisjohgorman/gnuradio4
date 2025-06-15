@@ -243,4 +243,8 @@ const boost::ut::suite<"ImChart"> windowTests = [] {
     };
 };
 
-int main() { /* not needed for UT */ }
+int main() {
+#ifdef _WIN32
+    SetConsoleOutputCP(CP_UTF8);
+#endif // #ifdef _WIN32
+}

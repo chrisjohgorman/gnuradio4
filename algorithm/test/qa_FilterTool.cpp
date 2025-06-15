@@ -907,4 +907,8 @@ const boost::ut::suite<"IIR & FIR Benchmarks"> filterBenchmarks = [] {
     } | std::tuple<double, float>{1.0, 1.0f};
 };
 
-int main() { /* not needed for UT */ }
+int main() {
+#ifdef _WIN32
+    SetConsoleOutputCP(CP_UTF8);
+#endif // #ifdef _WIN32
+}

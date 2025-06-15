@@ -619,4 +619,8 @@ const boost::ut::suite<"DataSet<T> filter"> _dataSetFilter = [] {
 
 #pragma GCC diagnostic pop
 
-int main() { /* not needed for UT */ }
+int main() {
+#ifdef _WIN32
+    SetConsoleOutputCP(CP_UTF8);
+#endif // #ifdef _WIN32
+}
