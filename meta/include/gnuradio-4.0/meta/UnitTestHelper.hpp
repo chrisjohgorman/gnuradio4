@@ -11,7 +11,7 @@
 
 #if defined(_WIN32)
 #include <windows.h>
-inline [[maybe_unused]] const int _set_console_output = [] {
+[[maybe_unused]] inline const int _set_console_output = [] {
     SetConsoleOutputCP(CP_UTF8);
     return 0;
 }();
