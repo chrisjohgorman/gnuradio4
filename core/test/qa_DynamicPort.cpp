@@ -193,7 +193,6 @@ const boost::ut::suite PortApiTests = [] {
         expect(eq(ConnectionResult::SUCCESS, flow.connect<"sum">(added).to<"sink">(out)));
 
         gr::scheduler::Simple sched{std::move(flow)};
-
         expect(sched.runAndWait().has_value());
     };
 

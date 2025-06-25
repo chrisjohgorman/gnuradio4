@@ -21,8 +21,9 @@ const boost::ut::suite DynamicBlocktests = [] {
         const gr::Size_t nSamples = 5;
 
         gr::Graph graph;
-        auto&     adder = graph.emplaceBlock<gr::blocks::math::Add<double>>({{"n_inputs", nInputs}});
-        auto&     sink  = graph.emplaceBlock<TagSink<double, ProcessFunction::USE_PROCESS_ONE>>({});
+
+        auto& adder = graph.emplaceBlock<gr::blocks::math::Add<double>>({{"n_inputs", nInputs}});
+        auto& sink  = graph.emplaceBlock<TagSink<double, ProcessFunction::USE_PROCESS_ONE>>({});
 
         std::vector<TagSource<double>*> sources;
         for (std::size_t i = 0; i < nInputs; ++i) {
