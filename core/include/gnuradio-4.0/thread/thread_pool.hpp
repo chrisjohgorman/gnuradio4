@@ -781,8 +781,17 @@ class Manager {
         const std::size_t maxConcurrency = std::thread::hardware_concurrency();
 #endif
         const std::size_t maxThread = maxConcurrency <= 2UZ ? 2UZ : maxConcurrency - 2UZ;
-        auto              cpu       = std::make_shared<ThreadPoolWrapper>(std::make_unique<BasicThreadPool>(std::string(kDefaultCpuPoolId), TaskType::CPU_BOUND, maxThread, maxThread), "CPU");
-        auto              io        = std::make_shared<ThreadPoolWrapper>(std::make_unique<BasicThreadPool>(std::string(kDefaultIoPoolId), TaskType::IO_BOUND, 2U, std::numeric_limits<uint32_t>::max()), "CPU");
+#if defined(_WIN32)
+        auto cpu_init = std::make_unique<BasicThreadPool>(std::string(kDefaultCpuPoolId), TaskType::CPU_BOUND, maxThread, maxThread);
+        cpu_init->waitUntilInitialised();
+        auto cpu     = std::make_shared<ThreadPoolWrapper>(std::move(cpu_init), "CPU");
+        auto io_init = std::make_unique<BasicThreadPool>(std::string(kDefaultIoPoolId), TaskType::IO_BOUND, 2U, std::numeric_limits<uint32_t>::max());
+        io_init->waitUntilInitialised();
+        auto io = std::make_shared<ThreadPoolWrapper>(std::move(io_init), "CPU");
+#else
+        auto cpu = std::make_shared<ThreadPoolWrapper>(std::make_unique<BasicThreadPool>(std::string(kDefaultCpuPoolId), TaskType::CPU_BOUND, maxThread, maxThread), "CPU");
+        auto io  = std::make_shared<ThreadPoolWrapper>(std::make_unique<BasicThreadPool>(std::string(kDefaultIoPoolId), TaskType::IO_BOUND, 2U, std::numeric_limits<uint32_t>::max()), "CPU");
+#endif // #if defined(_WIN32)
         registerPool(std::string(kDefaultCpuPoolId), std::move(cpu));
         registerPool(std::string(kDefaultIoPoolId), std::move(io));
     }
