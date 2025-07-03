@@ -22,12 +22,6 @@
 
 #include <gnuradio-4.0/meta/formatter.hpp>
 
-#if defined(_WIN32)
-using ThreadCountType = unsigned long long;
-#else
-using ThreadCountType = unsigned long;
-#endif
-
 namespace gr::thread_pool {
 namespace detail {
 
@@ -638,7 +632,7 @@ private:
                 }
                 running = false;
             } else if (timeDiffSinceLastUsed > keepAliveDuration) { // decrease to the minimum of _minThreads in a thread safe way
-                ThreadCountType nThreads = numThreads();
+                unsigned long nThreads = numThreads();
                 while (nThreads > minThreads()) { // compare and swap loop
                     if (_numThreads.compare_exchange_weak(nThreads, nThreads - 1, std::memory_order_acq_rel)) {
                         _numThreads.notify_all();
@@ -783,17 +777,8 @@ class Manager {
         const std::size_t maxConcurrency = std::thread::hardware_concurrency();
 #endif
         const std::size_t maxThread = maxConcurrency <= 2UZ ? 2UZ : maxConcurrency - 2UZ;
-#if defined(_WIN32)
-        auto cpu_init = std::make_unique<BasicThreadPool>(std::string(kDefaultCpuPoolId), TaskType::CPU_BOUND, maxThread, maxThread);
-        cpu_init->waitUntilInitialised();
-        auto cpu     = std::make_shared<ThreadPoolWrapper>(std::move(cpu_init), "CPU");
-        auto io_init = std::make_unique<BasicThreadPool>(std::string(kDefaultIoPoolId), TaskType::IO_BOUND, 2U, std::numeric_limits<uint32_t>::max());
-        io_init->waitUntilInitialised();
-        auto io = std::make_shared<ThreadPoolWrapper>(std::move(io_init), "CPU");
-#else
-        auto cpu = std::make_shared<ThreadPoolWrapper>(std::make_unique<BasicThreadPool>(std::string(kDefaultCpuPoolId), TaskType::CPU_BOUND, maxThread, maxThread), "CPU");
-        auto io  = std::make_shared<ThreadPoolWrapper>(std::make_unique<BasicThreadPool>(std::string(kDefaultIoPoolId), TaskType::IO_BOUND, 2U, std::numeric_limits<uint32_t>::max()), "CPU");
-#endif // #if defined(_WIN32)
+        auto              cpu       = std::make_shared<ThreadPoolWrapper>(std::make_unique<BasicThreadPool>(std::string(kDefaultCpuPoolId), TaskType::CPU_BOUND, maxThread, maxThread), "CPU");
+        auto              io        = std::make_shared<ThreadPoolWrapper>(std::make_unique<BasicThreadPool>(std::string(kDefaultIoPoolId), TaskType::IO_BOUND, 2U, std::numeric_limits<uint32_t>::max()), "CPU");
         registerPool(std::string(kDefaultCpuPoolId), std::move(cpu));
         registerPool(std::string(kDefaultIoPoolId), std::move(io));
     }
