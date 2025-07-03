@@ -138,14 +138,10 @@ inline const boost::ut::suite _buffer_tests = [] {
             benchmark::results::add_separator();
             for (std::size_t nP = 1; nP <= maxProducers; nP *= 2) {
                 for (std::size_t nC = 1; nC <= maxConsumers; nC *= 2) {
-#if defined(_WIN32)
-                    const std::size_t size = std::max(4096ULL, veclen) * nC * 10ULL;
-#else
-                    const std::size_t size = std::max(4096UL, veclen) * nC * 10UL;
-#endif
-                    const bool isPosix   = strategy == BufferStrategy::posix;
-                    const auto allocator = (isPosix) ? gr::double_mapped_memory_resource::allocator<int32_t>() : std::pmr::polymorphic_allocator<int32_t>();
-                    auto       invoke    = [&](auto buffer) { runTest(buffer, veclen, samples, nP, nC, isPosix ? "POSIX" : "portable"); };
+                    const std::size_t size      = std::max(4096UZ, veclen) * nC * 10UZ;
+                    const bool        isPosix   = strategy == BufferStrategy::posix;
+                    const auto        allocator = (isPosix) ? gr::double_mapped_memory_resource::allocator<int32_t>() : std::pmr::polymorphic_allocator<int32_t>();
+                    auto              invoke    = [&](auto buffer) { runTest(buffer, veclen, samples, nP, nC, isPosix ? "POSIX" : "portable"); };
                     if (nP == 1) {
                         using BufferType       = CircularBuffer<int32_t, std::dynamic_extent, ProducerType::Single>;
                         BufferLike auto buffer = BufferType(size, allocator);
