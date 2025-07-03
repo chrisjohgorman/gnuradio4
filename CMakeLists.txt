@@ -103,7 +103,10 @@ option(ENABLE_TBB "Enable the TBB dependency for std::execution::par in gcc" OFF
 option(ENABLE_EXAMPLES "Enable Example Builds" ${GR_TOPLEVEL_PROJECT})
 option(ENABLE_TESTING "Enable Test Builds" ${GR_TOPLEVEL_PROJECT})
 
-if(ENABLE_TESTING AND (UNIX OR APPLE OR WIN32))
+if(ENABLE_TESTING
+   AND (UNIX
+        OR APPLE
+        OR WIN32))
   include(CTest)
   list(APPEND CMAKE_CTEST_ARGUMENTS "--output-on-failure")
   enable_testing()
@@ -363,13 +366,17 @@ target_include_directories(vir INTERFACE ${vir-simd_SOURCE_DIR}/)
 # the script configure won't run on win32 without asking bash to do it
 if(WIN32)
   set(BASH "bash.exe")
+  # define GNURADIO_EXPORT for library loading
+  add_definitions(-DBUILDING_MYPLUGIN)
   # clang64 build requires setting CC or configure finds /usr/bin/gcc from msys2
   if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
     set(BUILD_COMPILER "CC=clang.exe")
   endif()
-  # on windows gcc requires stdc++exp to link for <format> and <print> functions
   if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     set(BUILD_COMPILER "CC=gcc.exe") # ensure we're using the right compiler for fftw build
+    # we need to set -Wa,-mbig-obj or build fails with gcc
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wa,-mbig-obj")
+    # on windows gcc requires stdc++exp to link for <format> and <print> functions
     set(CMAKE_CXX_STANDARD_LIBRARIES "${CMAKE_CXX_STANDARD_LIBRARIES} -lstdc++exp")
   endif()
 else()
@@ -506,7 +513,9 @@ add_subdirectory(algorithm)
 add_subdirectory(blocks)
 
 if(ENABLE_TESTING
-   AND (UNIX OR APPLE OR WIN32)
+   AND (UNIX
+        OR APPLE
+        OR WIN32)
    AND ENABLE_COVERAGE)
   message("Coverage reporting enabled")
   include(cmake/CodeCoverage.cmake) # https://github.com/bilke/cmake-modules/blob/master/CodeCoverage.cmake #
