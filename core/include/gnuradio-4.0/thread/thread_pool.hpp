@@ -677,8 +677,6 @@ struct TaskExecutor {
 
     virtual void               requestShutdown()  = 0;
     [[nodiscard]] virtual bool isShutdown() const = 0;
-
-    virtual void waitUntilInitialised() const = 0;
 };
 
 class ThreadPoolWrapper : public TaskExecutor {
@@ -708,8 +706,6 @@ public:
     [[nodiscard]] bool isShutdown() const override { return _pool->isShutdown(); }
 
     [[nodiscard]] BasicThreadPool& impl() noexcept { return *_pool; }
-
-    void waitUntilInitialised() const override { _pool->waitUntilInitialised(); }
 };
 
 /**
