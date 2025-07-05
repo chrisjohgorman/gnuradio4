@@ -142,11 +142,11 @@ public:
             }
 
             for (const auto& file : std::filesystem::directory_iterator{directory}) {
-#ifdef _WIN32
+#if defined(_WIN32)
                 if (file.is_regular_file() && file.path().extension() == ".dll") {
 #else
                 if (file.is_regular_file() && file.path().extension() == ".so") {
-#endif // _WIN32
+#endif
                     auto fileString = file.path().string();
                     if (_loadedPluginFiles.contains(fileString)) {
                         continue;
@@ -161,7 +161,11 @@ public:
                         _pluginHandlers.push_back(std::move(handler));
 
                     } else {
+#if defined(_WIN32)
                         _failedPlugins[file.path().string()] = handler.status();
+#else
+                        _failedPlugins[file.path()] = handler.status();
+#endif
                     }
                 }
             }
