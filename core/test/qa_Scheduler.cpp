@@ -721,13 +721,7 @@ const boost::ut::suite<"SchedulerTests"> SchedulerTests = [] {
         const auto progressAfterInit = scheduler.graph().progress().value();
         auto       estInvokeCount    = [&monitor] {
             const auto invokeCountInit = monitor._invokeCount.value();
-            // sleep time here affects the success of expect(ge(invokeCount2, invokeCount1))
-            // on Windows without the extra time we get a testcase failure periodically
-#if defined(_WIN32)
-            std::this_thread::sleep_for(35ms);
-#else
             std::this_thread::sleep_for(20ms);
-#endif // #if defined(_WIN32)
             return monitor._invokeCount.value() - invokeCountInit;
         };
 
