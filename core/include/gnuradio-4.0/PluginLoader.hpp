@@ -161,11 +161,7 @@ public:
                         _pluginHandlers.push_back(std::move(handler));
 
                     } else {
-#if defined(_WIN32)
                         _failedPlugins[file.path().string()] = handler.status();
-#else
-                        _failedPlugins[file.path()] = handler.status();
-#endif
                     }
                 }
             }
