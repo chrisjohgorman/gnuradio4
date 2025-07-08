@@ -18,9 +18,6 @@ function(setup_test_no_asan TEST_NAME)
             gr-basic
             gr-filter
             ut)
-  if(WIN32)
-    target_link_libraries(${TEST_NAME} PRIVATE dl)
-  endif()
   add_test(NAME ${TEST_NAME} COMMAND ${CMAKE_CROSSCOMPILING_EMULATOR} ${CMAKE_CURRENT_BINARY_DIR}/${TEST_NAME})
 endfunction()
 
@@ -48,9 +45,6 @@ function(add_app_test TEST_NAME)
   add_executable(${TEST_NAME} ${TEST_NAME}.cpp)
   setup_test(${TEST_NAME})
   target_link_libraries(${TEST_NAME} PRIVATE gnuradio-core gnuradio-blocklib-core gnuradio-plugin)
-  if(WIN32)
-    target_compile_definitions(${TEST_NAME} PRIVATE BUILDING_MYPLUGIN)
-  endif()
   add_dependencies(
     ${TEST_NAME}
     GoodBasePlugin
