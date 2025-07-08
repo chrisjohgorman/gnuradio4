@@ -16,9 +16,6 @@ if(NOT EMSCRIPTEN)
               gr-filter
               ut
               ut-benchmark)
-    if(WIN32)
-      target_link_libraries(${BM_NAME} PRIVATE dl)
-    endif()
     if(EMSCRIPTEN) # performance benchmarks should be optimised
       target_compile_options(${BM_NAME} PRIVATE -O3)
     else()
