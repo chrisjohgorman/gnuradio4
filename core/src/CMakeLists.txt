@@ -6,9 +6,6 @@ endif()
 if(NOT EMSCRIPTEN)
   set(CMAKE_BUILD_WITH_INSTALL_RPATH ON)
   add_library(gnuradio-plugin SHARED plugin.cpp)
-  if(WIN32)
-    target_compile_definitions(gnuradio-plugin PRIVATE BUILDING_MYPLUGIN)
-  endif()
   target_include_directories(
     gnuradio-plugin PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
                            $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}> $<INSTALL_INTERFACE:include/>)
