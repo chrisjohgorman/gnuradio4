@@ -13,10 +13,6 @@ gr_add_block_library(
   gr-filter
   gnuradio-algorithm)
 
-if(TARGET GrFilterBlocksObject AND WIN32)
-  target_compile_definitions(GrFilterBlocksObject PRIVATE BUILDING_MYPLUGIN)
-endif()
-
 if(TARGET GrFilterBlocksShared AND ENABLE_TESTING)
   add_subdirectory(test)
 endif()
