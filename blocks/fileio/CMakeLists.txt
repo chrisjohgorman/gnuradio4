@@ -12,10 +12,6 @@ gr_add_block_library(
   LINK_LIBRARIES
   gr-fileio)
 
-if(TARGET GrFileIoBlocksObject AND WIN32)
-  target_compile_definitions(GrFileIoBlocksObject PRIVATE BUILDING_MYPLUGIN)
-endif()
-
 if(TARGET GrFileIoBlocksShared AND ENABLE_TESTING)
   add_subdirectory(test)
 endif()
