@@ -17,10 +17,6 @@ gr_add_block_library(
   gr-testing
   gnuradio-algorithm)
 
-if(TARGET GrTestingBlocksObject AND WIN32)
-  target_compile_definitions(GrTestingBlocksObject PRIVATE BUILDING_MYPLUGIN)
-endif()
-
 if(TARGET GrTestingBlocksShared AND ENABLE_TESTING)
   add_subdirectory(test)
 endif()
