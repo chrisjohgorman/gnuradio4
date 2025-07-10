@@ -13,10 +13,6 @@ gr_add_block_library(
   LINK_LIBRARIES
   gr-math)
 
-if(TARGET GrMathBlocksObject AND WIN32)
-  target_compile_definitions(GrMathBlocksObject PRIVATE BUILDING_MYPLUGIN)
-endif()
-
 if(TARGET GrMathBlocksShared AND ENABLE_TESTING)
   add_subdirectory(test)
 endif()
