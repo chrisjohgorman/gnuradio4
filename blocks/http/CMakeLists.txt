@@ -11,10 +11,6 @@ gr_add_block_library(
   LINK_LIBRARIES
   gr-http)
 
-if(TARGET GrHttpBlocksObject AND WIN32)
-	target_compile_definitions(GrHttpBlocksObject PRIVATE BUILDING_MYPLUGIN)
-endif()
-
 if(TARGET GrHttpBlocksShared AND ENABLE_TESTING)
   add_subdirectory(test)
 endif()
