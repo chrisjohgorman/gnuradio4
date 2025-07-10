@@ -14,10 +14,6 @@ if(NOT EMSCRIPTEN AND TARGET GrBasicBlocksShared)
   add_executable(qa_apptest_KnownStaticLibBlocks qa_apptest_KnownStaticLibBlocks.cpp)
   setup_test(qa_apptest_KnownStaticLibBlocks)
   target_link_libraries(qa_apptest_KnownStaticLibBlocks PRIVATE gnuradio-core GrBasicBlocksStatic)
-  if(WIN32)
-    target_compile_definitions(qa_apptest_KnownStaticLibBlocks PRIVATE BUILDING_MYPLUGIN)
-  endif()
-
 
   add_executable(qa_apptest_LoadingPlainBlocklibs qa_apptest_LoadingPlainBlocklibs.cpp)
   setup_test(qa_apptest_LoadingPlainBlocklibs)
