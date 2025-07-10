@@ -12,10 +12,6 @@ gr_add_block_library(
   gr-basic
   gr-fourier)
 
-if(TARGET GrFourierBlocksObject AND WIN32)
-  target_compile_definitions(GrFourierBlocksObject PRIVATE BUILDING_MYPLUGIN)
-endif()
-
 if(TARGET GrFourierBlocksShared AND ENABLE_TESTING)
   add_subdirectory(test)
 endif()
