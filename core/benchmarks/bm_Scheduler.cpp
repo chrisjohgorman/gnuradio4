@@ -85,7 +85,14 @@ void exec_bm(auto& scheduler, const std::string& test_case, [[maybe_unused]] Tes
     using gr::scheduler::ExecutionPolicy::multiThreaded;
 
     using namespace gr::thread_pool;
+
+#if defined(_WIN32)
+    auto cpu_init = std::make_unique<BasicThreadPool>(std::string(kDefaultCpuPoolId), TaskType::CPU_BOUND, 2U, 2U);
+    cpu_init->waitUntilInitialised();
+    auto cpu = std::make_shared<ThreadPoolWrapper>(std::move(cpu_init), "CPU");
+#else
     auto cpu = std::make_shared<ThreadPoolWrapper>(std::make_unique<BasicThreadPool>(std::string(kDefaultCpuPoolId), TaskType::CPU_BOUND, 2U, 2U), "CPU");
+#endif
     gr::thread_pool::Manager::instance().replacePool(std::string(kDefaultCpuPoolId), std::move(cpu));
     const auto minThreads = gr::thread_pool::Manager::defaultCpuPool()->minThreads();
     const auto maxThreads = gr::thread_pool::Manager::defaultCpuPool()->maxThreads();
